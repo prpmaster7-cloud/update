@@ -2,7 +2,6 @@ import requests
 import itertools
 import threading
 
-_lock    = itertools.cycle([])
 _proxies = []
 _cycle   = None
 _clock   = threading.Lock()
