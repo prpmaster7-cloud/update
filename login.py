@@ -2,7 +2,7 @@ import sys
 import time
 import requests
 import config
-from useragent import window1
+from useragent import get_ua
 from uid import creationyear, fake_device_ids
 from proxy import next_proxy
 
@@ -65,7 +65,7 @@ def login_1(uid):
                 'api_key': '882a8490361da98702bf97a021ddc14d',
             }
             headers = {
-                'User-Agent': window1(),
+                'User-Agent': get_ua(),
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Host': 'graph.facebook.com',
                 'X-FB-Net-HNI': '25227',
@@ -109,7 +109,7 @@ def login_2(uid):
                     'x-fb-net-hni': str(rr(20000, 40000)),
                     'x-fb-connection-quality': 'EXCELLENT',
                     'x-fb-connection-type': 'cell.CTRadioAccessTechnologyHSDPA',
-                    'user-agent': window1(),
+                    'user-agent': get_ua(),
                     'content-type': 'application/x-www-form-urlencoded',
                     'x-fb-http-engine': 'Liger',
                 }

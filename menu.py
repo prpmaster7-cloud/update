@@ -9,6 +9,7 @@ from utils import box_line
 from login import login_1, login_2
 from proxy import load_proxies
 from uid import gen_uid_all_series, gen_uid_100003_100004, gen_uid_2009
+from useragent import set_ua
 
 
 def banner():
@@ -49,6 +50,35 @@ def _prompt_int(label, min_val=1, max_val=999999):
         if raw.isdigit() and min_val <= int(raw) <= max_val:
             return int(raw)
         print(f"  {rad}✘  Enter a valid number between {min_val} and {max_val}.{RESET}")
+
+
+def _select_ua():
+    print(f"\n  {W}SELECT USER-AGENT{RESET}")
+    box_line()
+    items = [
+        ('1',  'FB ANDROID',     'recommended'),
+        ('2',  'FB LITE',        ''),
+        ('3',  'MESSENGER',      ''),
+        ('4',  'CHROME MOBILE',  ''),
+        ('5',  'CHROME DESKTOP', ''),
+        ('6',  'SAMSUNG BROWSER',''),
+        ('7',  'OPERA MOBILE',   ''),
+        ('8',  'FIREFOX MOBILE', ''),
+        ('9',  'FIREFOX DESKTOP',''),
+        ('10', 'EDGE MOBILE',    ''),
+        ('11', 'MIXED FB',       'FB apps only'),
+        ('12', 'MIXED MOBILE',   'mobile only'),
+        ('13', 'MIXED ALL',      'all random'),
+    ]
+    for k, label, desc in items:
+        _menu_item(k, label, desc)
+    box_line()
+    while True:
+        choice = _prompt('SELECT UA').strip()
+        if choice in [i[0] for i in items]:
+            set_ua(choice)
+            return
+        print(f"  {rad}✘  Choose 1–13.{RESET}")
 
 
 def _select_method():
@@ -144,6 +174,7 @@ def old_One():
         ask = '1'
     limit = _prompt_int('TOTAL IDs')
     meth  = _select_method()
+    _select_ua()
     _run_pool(gen_uid_all_series(limit, ask), meth)
 
 
@@ -153,6 +184,7 @@ def old_Tow():
     box_line()
     limit = _prompt_int('TOTAL IDs')
     meth  = _select_method()
+    _select_ua()
     _run_pool(gen_uid_100003_100004(limit), meth)
 
 
@@ -162,4 +194,5 @@ def old_Tree():
     box_line()
     limit = _prompt_int('TOTAL IDs')
     meth  = _select_method()
+    _select_ua()
     _run_pool(gen_uid_2009(limit), meth)
