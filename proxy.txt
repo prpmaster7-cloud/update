@@ -1,0 +1,4 @@
+# FORMAT: HOST:PORT:USER:PASS  or  HOST:PORT
+# Example:
+# 192.168.1.1:8080:myuser:mypass
+# 10.0.0.1:3128

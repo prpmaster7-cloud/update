@@ -8,6 +8,7 @@ from config import (rad, Y, G, W, CY, BL, RESET, DIM,
                     TOOL_FB, TOOL_GITHUB, TOOL_TG)
 from utils import box_line
 from login import login_1, login_2
+from proxy import load_proxies
 
 
 def banner():
@@ -65,6 +66,7 @@ def _select_method():
 
 def _run_pool(user_list, meth, star=''):
     import config
+    load_proxies()
     banner()
     box_line('═', CY)
     print(f"  {W}Total IDs {RESET} {DIM}│{RESET}  {G}{len(user_list)}{RESET}")
