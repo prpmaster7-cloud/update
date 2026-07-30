@@ -27,12 +27,6 @@ def kabbo_approval():
     box_line()
     print(f"  {W}BINANCE   {RESET} {DIM}│{RESET}  {Y}1185161524{RESET}")
     box_line('═', CY)
-    print(f"\n  {CY}💎  SUBSCRIPTION PLANS{RESET}")
-    box_line()
-    print(f"  {G}[1]{RESET}   7 Days   {DIM}→{RESET}  {Y}$5{RESET}")
-    print(f"  {G}[2]{RESET}  15 Days   {DIM}→{RESET}  {Y}$10{RESET}")
-    print(f"  {G}[3]{RESET}  30 Days   {DIM}→{RESET}  {Y}$18{RESET}")
-    box_line()
     print(f"\n  {W}Status  {RESET} {DIM}│{RESET}  {Y}Verifying license...{RESET}\n")
 
     try:
@@ -42,7 +36,6 @@ def kabbo_approval():
             time.sleep(1.5)
         else:
             print(f"  {rad}✘  Key not approved. Contact admin.{RESET}")
-            os.system(f'xdg-open https://wa.me/+923229120975?text=Approve-My-Key-KABBO-{key}')
             sys.exit()
     except Exception:
         sys.exit()
