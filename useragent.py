@@ -134,6 +134,12 @@ _UA_MAP = {
 }
 
 
+# FB app UA types (1,2,3) + mixed FB (11) → use FB-specific headers
+_FB_UA_TYPES = {'1', '2', '3', '11'}
+# mobile UA types → use mobile headers
+_MOBILE_UA_TYPES = {'1','2','3','4','6','7','8','10','11','12'}
+
+
 def set_ua(choice):
     global _selected
     _selected = choice
@@ -142,6 +148,14 @@ def set_ua(choice):
 def get_ua():
     fn = _UA_MAP.get(_selected, _fb_android)
     return fn()
+
+
+def is_fb_ua():
+    return _selected in _FB_UA_TYPES
+
+
+def is_mobile_ua():
+    return _selected in _MOBILE_UA_TYPES
 
 
 # legacy aliases
