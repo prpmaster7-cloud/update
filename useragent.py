@@ -117,6 +117,8 @@ def _edge_mobile():
     )
 
 
+_UA_FUNCS = [_fb_android, _fb_lite, _messenger, _chrome_mobile, _chrome_desktop, _samsung_browser, _opera_mobile, _firefox_mobile, _firefox_desktop, _edge_mobile]
+
 _UA_MAP = {
     '1':  _fb_android,
     '2':  _fb_lite,
@@ -130,7 +132,7 @@ _UA_MAP = {
     '10': _edge_mobile,
     '11': lambda: random.choice([_fb_android, _fb_lite, _messenger])(),
     '12': lambda: random.choice([_fb_android, _fb_lite, _messenger, _chrome_mobile, _samsung_browser, _opera_mobile, _firefox_mobile, _edge_mobile])(),
-    '13': lambda: random.choice(list(_UA_MAP.values()))(),
+    '13': lambda: random.choice(_UA_FUNCS)(),
 }
 
 

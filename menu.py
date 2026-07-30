@@ -96,6 +96,8 @@ def _select_method():
 
 def _run_pool(user_list, meth):
     import config
+    config.loop = 0
+    config.oks  = []
     load_proxies()
     banner()
     box_line('═', CY)
