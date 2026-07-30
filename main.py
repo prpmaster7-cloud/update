@@ -25,12 +25,13 @@ requests.urllib3.disable_warnings()
 
 os.system('clear')
 
-from security import kabbo_approval, anti_tamper_check
+from security import kabbo_approval, anti_tamper_check, sec
 from menu import BNG_71_
 
 kabbo_approval()
 os.system('clear')
 anti_tamper_check()
+sec()
 
 sys.stdout.write('\x1b]2;𓆩 KABBO 👑 𓆪\x07')
 

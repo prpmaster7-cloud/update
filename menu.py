@@ -147,7 +147,7 @@ def old_clone():
     box_line()
     _menu_item('A', 'ALL SERIES',            '2010 – 2014 range')
     _menu_item('B', '100003 / 100004 SERIES', '2011 – 2012 range')
-    _menu_item('C', '2009 SERIES',            '1000004x prefix')
+    _menu_item('C', '2009 SERIES', '1000000x–1000005x prefix')
     box_line()
     choice = _prompt('CHOOSE')
     if choice.upper() in ('A', '1'):

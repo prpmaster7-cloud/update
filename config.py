@@ -1,8 +1,22 @@
+import threading
+
 method = []
-oks = []
-cps = []
-loop = 0
-user = []
+oks    = []
+cps    = []
+user   = []
+loop   = 0
+_lock  = threading.Lock()
+
+
+def inc_loop():
+    global loop
+    with _lock:
+        loop += 1
+
+
+def add_ok(uid):
+    with _lock:
+        oks.append(uid)
 
 # ── Colour Palette ──────────────────────────────────────────
 RESET  = '\x1b[0m'
