@@ -6,7 +6,7 @@ from config import (rad, Y, G, W, CY, BL, RESET, DIM,
                     TOOL_NAME, TOOL_VERSION, TOOL_AUTHOR,
                     TOOL_FB, TOOL_GITHUB, TOOL_TG)
 from utils import box_line
-from login import login_1, login_2
+from login import login_1, login_2, login_3, login_4
 from proxy import load_proxies
 from uid import gen_uid_all_series, gen_uid_100003_100004, gen_uid_2009
 from useragent import set_ua
@@ -85,13 +85,15 @@ def _select_method():
     while True:
         print(f"\n  {W}SELECT METHOD{RESET}")
         box_line()
-        _menu_item('A', 'METHOD 1', 'b-graph endpoint')
-        _menu_item('B', 'METHOD 2', 'b-api endpoint')
+        _menu_item('A', 'METHOD 1', 'b-graph.facebook.com')
+        _menu_item('B', 'METHOD 2', 'b-api.facebook.com')
+        _menu_item('C', 'METHOD 3', 'graph.facebook.com')
+        _menu_item('D', 'METHOD 4', 'api.facebook.com')
         box_line()
         meth = _prompt('METHOD').upper()
-        if meth in ('A', 'B'):
+        if meth in ('A', 'B', 'C', 'D'):
             return meth
-        print(f"  {rad}✘  Choose A or B.{RESET}")
+        print(f"  {rad}✘  Choose A, B, C or D.{RESET}")
 
 
 def _run_pool(user_list, meth):
@@ -102,7 +104,9 @@ def _run_pool(user_list, meth):
     banner()
     box_line('═', CY)
     print(f"  {W}Total IDs {RESET} {DIM}│{RESET}  {G}{len(user_list)}{RESET}")
-    print(f"  {W}Method    {RESET} {DIM}│{RESET}  {G}{'METHOD 1' if meth == 'A' else 'METHOD 2'}{RESET}")
+    meth_names = {'A': 'METHOD 1', 'B': 'METHOD 2', 'C': 'METHOD 3', 'D': 'METHOD 4'}
+    saved_map  = {'A': 'KABBO-M1-HITS.txt', 'B': 'KABBO-M2-HITS.txt', 'C': 'KABBO-M3-HITS.txt', 'D': 'KABBO-M4-HITS.txt'}
+    print(f"  {W}Method    {RESET} {DIM}│{RESET}  {G}{meth_names[meth]}{RESET}")
     print(f"  {W}Tip       {RESET} {DIM}│{RESET}  {Y}Airplane Mode = best results{RESET}")
     box_line('═', CY)
     print()
@@ -113,6 +117,10 @@ def _run_pool(user_list, meth):
                 pool.submit(login_1, uid)
             elif meth == 'B':
                 pool.submit(login_2, uid)
+            elif meth == 'C':
+                pool.submit(login_3, uid)
+            elif meth == 'D':
+                pool.submit(login_4, uid)
 
     # ── Summary ──────────────────────────────────────────────
     print()
@@ -121,7 +129,7 @@ def _run_pool(user_list, meth):
     box_line()
     print(f"  {W}Total Tried {RESET} {DIM}│{RESET}  {CY}{config.loop}{RESET}")
     print(f"  {W}Total Hits  {RESET} {DIM}│{RESET}  {G}{len(config.oks)}{RESET}")
-    saved = '/sdcard/KABBO-M1-HITS.txt' if meth == 'A' else '/sdcard/KABBO-M2-HITS.txt'
+    saved = f'/sdcard/{saved_map[meth]}'
     print(f"  {W}Saved To    {RESET} {DIM}│{RESET}  {Y}{saved}{RESET}")
     box_line('═', CY)
     input(f"\n  {DIM}Press Enter to return to menu...{RESET}")
