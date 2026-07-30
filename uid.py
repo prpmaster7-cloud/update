@@ -41,11 +41,24 @@ def fake_device_ids():
 
 
 def gen_uid_all_series(limit, range_choice='1'):
+    # correct year-based prefix ranges (2010-2014 / extended)
+    prefixes_1 = [
+        '100001',                          # 2010
+        '100002', '100003',                # 2011
+        '100004',                          # 2012
+        '100005', '100006',                # 2013
+        '100007', '100008',                # 2014
+    ]
+    prefixes_2 = prefixes_1 + [
+        '100009',                          # 2015
+        '10001', '10002',                  # 2016-2017
+    ]
+    pool = prefixes_1 if range_choice == '1' else prefixes_2
     uids = []
-    star = '10000'
     for _ in range(limit):
-        n = random.choice(range(1000000000, 1999999999 if range_choice == '1' else 4999999999))
-        uids.append(star + str(n))
+        prefix = random.choice(pool)
+        suffix = ''.join(random.choices('0123456789', k=15 - len(prefix)))
+        uids.append(prefix + suffix)
     return uids
 
 
@@ -58,7 +71,11 @@ def gen_uid_100003_100004(limit):
 
 
 def gen_uid_2009(limit):
+    # covers all 2009 prefixes: 1000000-1000005
+    prefixes = ['1000000', '1000001', '1000002', '1000003', '1000004', '1000005']
     uids = []
     for _ in range(limit):
-        uids.append('1000004' + ''.join(random.choices('0123456789', k=8)))
+        prefix = random.choice(prefixes)
+        suffix = ''.join(random.choices('0123456789', k=15 - len(prefix)))
+        uids.append(prefix + suffix)
     return uids
