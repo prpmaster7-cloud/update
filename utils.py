@@ -2,12 +2,23 @@ import os
 import random
 import sys
 
+RESET = '\x1b[0m'
+DIM   = '\x1b[2;37m'
+CY    = '\x1b[38;5;51m'
+
+
+def box_line(char='─', color=DIM, length=47):
+    print(f"{color}{char * length}{RESET}")
+
+
+def linex():
+    box_line('━', CY)
+
 
 def windows():
-    aV = random.choice(range(10, 20))
     chrome_major_old = random.choice(range(100, 115))
     A = f"Mozilla/5.0 (Windows; U; Windows NT {random.choice(range(6, 11))}.1; en-US) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{chrome_major_old}.0.{random.choice(range(5000, 6500))}.0 Safari/537.36"
-    bz = f"537.36"
+    bz = "537.36"
     chrome_major_mid = random.choice(range(115, 125))
     B = f"Mozilla/5.0 (Windows NT {random.choice([10, 11])}.0; Win64; x64) AppleWebKit/{bz} (KHTML, like Gecko) Chrome/{chrome_major_mid}.0.{random.choice(range(6000, 6800))}.{random.choice(range(1, 150))} Safari/{bz}"
     chrome_major_wow = random.choice(range(120, 130))
@@ -37,60 +48,32 @@ def window1():
 
 def creationyear(uid):
     if len(uid) == 15:
-        if uid.startswith('1000000000'):
-            return '2009'
-        if uid.startswith('100000000'):
-            return '2009'
-        if uid.startswith('10000000'):
-            return '2009'
-        if uid.startswith(('1000000', '1000001', '1000002', '1000003', '1000004', '1000005')):
-            return '2009'
-        if uid.startswith(('1000006', '1000007', '1000008', '1000009')):
-            return '2010'
-        if uid.startswith('100001'):
-            return '2010'
-        if uid.startswith(('100002', '100003')):
-            return '2011'
-        if uid.startswith('100004'):
-            return '2012'
-        if uid.startswith(('100005', '100006')):
-            return '2013'
-        if uid.startswith(('100007', '100008')):
-            return '2014'
-        if uid.startswith('100009'):
-            return '2015'
-        if uid.startswith('10001'):
-            return '2016'
-        if uid.startswith('10002'):
-            return '2017'
-        if uid.startswith('10003'):
-            return '2018'
-        if uid.startswith('10004'):
-            return '2019'
-        if uid.startswith('10005'):
-            return '2020'
-        if uid.startswith('10006'):
-            return '2021'
-        if uid.startswith('10009'):
-            return '2023'
-        if uid.startswith(('10007', '10008')):
-            return '2022'
+        if uid.startswith('1000000000'): return '2009'
+        if uid.startswith('100000000'):  return '2009'
+        if uid.startswith('10000000'):   return '2009'
+        if uid.startswith(('1000000', '1000001', '1000002', '1000003', '1000004', '1000005')): return '2009'
+        if uid.startswith(('1000006', '1000007', '1000008', '1000009')): return '2010'
+        if uid.startswith('100001'):  return '2010'
+        if uid.startswith(('100002', '100003')): return '2011'
+        if uid.startswith('100004'):  return '2012'
+        if uid.startswith(('100005', '100006')): return '2013'
+        if uid.startswith(('100007', '100008')): return '2014'
+        if uid.startswith('100009'):  return '2015'
+        if uid.startswith('10001'):   return '2016'
+        if uid.startswith('10002'):   return '2017'
+        if uid.startswith('10003'):   return '2018'
+        if uid.startswith('10004'):   return '2019'
+        if uid.startswith('10005'):   return '2020'
+        if uid.startswith('10006'):   return '2021'
+        if uid.startswith('10009'):   return '2023'
+        if uid.startswith(('10007', '10008')): return '2022'
         return ''
-    elif len(uid) in (9, 10):
-        return '2008'
-    elif len(uid) == 8:
-        return '2007'
-    elif len(uid) == 7:
-        return '2006'
-    elif len(uid) == 14 and uid.startswith('61'):
-        return '2024'
-    else:
-        return ''
+    elif len(uid) in (9, 10): return '2008'
+    elif len(uid) == 8:       return '2007'
+    elif len(uid) == 7:       return '2006'
+    elif len(uid) == 14 and uid.startswith('61'): return '2024'
+    return ''
 
 
 def clear():
     os.system('clear')
-
-
-def linex():
-    print('\033[1;32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')

