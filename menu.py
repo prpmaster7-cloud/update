@@ -1,6 +1,5 @@
 import os
 import sys
-import random
 import time
 from concurrent.futures import ThreadPoolExecutor as tred
 from config import (rad, Y, G, W, CY, BL, RESET, DIM,
@@ -9,6 +8,7 @@ from config import (rad, Y, G, W, CY, BL, RESET, DIM,
 from utils import box_line
 from login import login_1, login_2
 from proxy import load_proxies
+from uid import gen_uid_all_series, gen_uid_100003_100004, gen_uid_2009
 
 
 def banner():
@@ -64,7 +64,7 @@ def _select_method():
         print(f"  {rad}✘  Choose A or B.{RESET}")
 
 
-def _run_pool(user_list, meth, star=''):
+def _run_pool(user_list, meth):
     import config
     load_proxies()
     banner()
@@ -76,8 +76,7 @@ def _run_pool(user_list, meth, star=''):
     print()
 
     with tred(max_workers=30) as pool:
-        for item in user_list:
-            uid = star + item if star else item
+        for uid in user_list:
             if meth == 'A':
                 pool.submit(login_1, uid)
             elif meth == 'B':
@@ -134,7 +133,6 @@ def old_clone():
 
 
 def old_One():
-    user = []
     banner()
     print(f"\n  {W}OLD CLONE  {DIM}│{RESET}  {G}ALL SERIES  (2010 – 2014){RESET}")
     box_line()
@@ -145,36 +143,23 @@ def old_One():
     if ask not in ('1', '2'):
         ask = '1'
     limit = _prompt_int('TOTAL IDs')
-    star  = '10000'
-    for _ in range(limit):
-        data = str(random.choice(range(1000000000, 1999999999 if ask == '1' else 4999999999)))
-        user.append(data)
-    meth = _select_method()
-    _run_pool(user, meth, star)
+    meth  = _select_method()
+    _run_pool(gen_uid_all_series(limit, ask), meth)
 
 
 def old_Tow():
-    user = []
     banner()
     print(f"\n  {W}OLD CLONE  {DIM}│{RESET}  {G}100003 / 100004 SERIES{RESET}")
     box_line()
     limit = _prompt_int('TOTAL IDs')
-    for _ in range(limit):
-        prefix = random.choice(['100003', '100004'])
-        uid    = prefix + ''.join(random.choices('0123456789', k=9))
-        user.append(uid)
-    meth = _select_method()
-    _run_pool(user, meth)
+    meth  = _select_method()
+    _run_pool(gen_uid_100003_100004(limit), meth)
 
 
 def old_Tree():
-    user = []
     banner()
     print(f"\n  {W}OLD CLONE  {DIM}│{RESET}  {G}2009 SERIES{RESET}")
     box_line()
     limit = _prompt_int('TOTAL IDs')
-    for _ in range(limit):
-        uid = '1000004' + ''.join(random.choices('0123456789', k=8))
-        user.append(uid)
-    meth = _select_method()
-    _run_pool(user, meth)
+    meth  = _select_method()
+    _run_pool(gen_uid_2009(limit), meth)

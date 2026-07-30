@@ -1,9 +1,9 @@
 import sys
 import time
-import uuid
 import requests
 import config
-from utils import window1, creationyear
+from useragent import window1
+from uid import creationyear, fake_device_ids
 from proxy import next_proxy
 
 G   = '\x1b[38;5;46m'
@@ -40,12 +40,13 @@ def login_1(uid):
     try:
         for pw in ('123456', '1234567', '12345678', '123456789'):
             _status_line(1)
+            ids  = fake_device_ids()
             data = {
-                'adid': str(uuid.uuid4()),
+                'adid': ids['adid'],
                 'format': 'json',
-                'device_id': str(uuid.uuid4()),
+                'device_id': ids['device_id'],
                 'cpl': 'true',
-                'family_device_id': str(uuid.uuid4()),
+                'family_device_id': ids['family_device_id'],
                 'credentials_type': 'device_based_login_password',
                 'error_detail_type': 'button_with_disabled',
                 'source': 'device_based_login',
@@ -54,7 +55,7 @@ def login_1(uid):
                 'access_token': '350685531728|62f8ce9f74b12f84c123cc23437a4a32',
                 'generate_session_cookies': '1',
                 'meta_inf_fbmeta': '',
-                'advertiser_id': str(uuid.uuid4()),
+                'advertiser_id': ids['advertiser_id'],
                 'currently_logged_in_userid': '0',
                 'locale': 'en_US',
                 'client_country_code': 'US',
